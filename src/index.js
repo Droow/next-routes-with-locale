@@ -154,6 +154,7 @@ class Routes {
           app.render(req, res, route.page, query)
         }
       } else {
+        parsedUrl.query = { ...query };
         nextHandler(req, res, parsedUrl)
       }
     }
