@@ -137,7 +137,9 @@ class Routes {
         return { route: this.routes[0], urls: this.routes[0].getUrls(params), byName: true }
         // throw new Error(`Route "${name}" not found`)
       }
+      return { route, urls: route.getUrls(params, locale), byName: true }
     }
+
     return { route, urls: route.getUrls(params), byName: true }
   }
 
@@ -246,8 +248,8 @@ class Route {
     return `${this.page}?${toQuerystring({ ...params, nextRoute: this.name })}`
   }
 
-  getAs (params = {}) {
-    let as = (this.hideLocale ? '' : '/' + this.locale) + this.toPath(params)
+  getAs (params = {}, fallbackLocale = false) {
+    let as = (this.hideLocale ? '' : '/' + (fallbackLocale || this.locale)) + this.toPath(params)
     const keys = Object.keys(params)
     const qsKeys = keys.filter(key => this.keyNames.indexOf(key) === -1)
 
@@ -264,8 +266,8 @@ class Route {
     return `${as}?${toQuerystring(qsParams)}`
   }
 
-  getUrls (params) {
-    const as = this.getAs(params)
+  getUrls (params, locale = false) {
+    const as = this.getAs(params, locale)
     const href = this.getHref(params)
     return { as, href }
   }

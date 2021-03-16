@@ -298,6 +298,12 @@ var Routes = /*#__PURE__*/function () {
             byName: true
           }; // throw new Error(`Route "${name}" not found`)
         }
+
+        return {
+          route: route,
+          urls: route.getUrls(params, locale),
+          byName: true
+        };
       }
 
       return {
@@ -473,7 +479,8 @@ var Route = /*#__PURE__*/function () {
           _context8;
 
       var params = arguments.length > 0 && arguments[0] !== undefined ? arguments[0] : {};
-      var as = (this.hideLocale ? '' : '/' + this.locale) + this.toPath(params);
+      var fallbackLocale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      var as = (this.hideLocale ? '' : '/' + (fallbackLocale || this.locale)) + this.toPath(params);
       var keys = (0, _keys["default"])(params);
       var qsKeys = (0, _filter["default"])(keys).call(keys, function (key) {
         var _context7;
@@ -494,7 +501,8 @@ var Route = /*#__PURE__*/function () {
   }, {
     key: "getUrls",
     value: function getUrls(params) {
-      var as = this.getAs(params);
+      var locale = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+      var as = this.getAs(params, locale);
       var href = this.getHref(params);
       return {
         as: as,
