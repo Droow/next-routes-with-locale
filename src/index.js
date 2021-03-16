@@ -127,14 +127,18 @@ class Routes {
 
   findAndGetUrls (name, locale, params) {
     locale = locale || this.locale
-    const route = this.findByName(name, locale)
+    let route = this.findByName(name, locale)
 
-    if (route) {
-      return { route, urls: route.getUrls(params), byName: true }
-    } else {
-      return { route: this.routes[0], urls: this.routes[0].getUrls(params), byName: true }
-      // throw new Error(`Route "${name}" not found`)
+    if (!route) {
+      // if no route for given locale is available, try in default locale
+      route = this.findByName(name, this.locale)
+      if (!route) {
+        // If still not found, use index route
+        return { route: this.routes[0], urls: this.routes[0].getUrls(params), byName: true }
+        // throw new Error(`Route "${name}" not found`)
+      }
     }
+    return { route, urls: route.getUrls(params), byName: true }
   }
 
   getRequestHandler (app, customHandler) {

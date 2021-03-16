@@ -286,19 +286,25 @@ var Routes = /*#__PURE__*/function () {
       locale = locale || this.locale;
       var route = this.findByName(name, locale);
 
-      if (route) {
-        return {
-          route: route,
-          urls: route.getUrls(params),
-          byName: true
-        };
-      } else {
-        return {
-          route: this.routes[0],
-          urls: this.routes[0].getUrls(params),
-          byName: true
-        }; // throw new Error(`Route "${name}" not found`)
+      if (!route) {
+        // if no route for given locale is available, try in default locale
+        route = this.findByName(name, this.locale);
+
+        if (!route) {
+          // If still not found, use index route
+          return {
+            route: this.routes[0],
+            urls: this.routes[0].getUrls(params),
+            byName: true
+          }; // throw new Error(`Route "${name}" not found`)
+        }
       }
+
+      return {
+        route: route,
+        urls: route.getUrls(params),
+        byName: true
+      };
     }
   }, {
     key: "getRequestHandler",
