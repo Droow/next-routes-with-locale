@@ -442,7 +442,7 @@ var Route = /*#__PURE__*/function () {
       if (!this.hideLocale && path.substring(1, this.locale.length + 1) === this.locale) {
         path = path.substring(this.locale.length + 1);
 
-        if (!path) {
+        if (!path || path === '/') {
           return {};
         }
       }
